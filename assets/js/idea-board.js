@@ -61,6 +61,40 @@ const IdeaBoardManager = (() => {
   };
 
   /**
+   * Check if an idea can be edited
+   * @param {string} timestamp - Idea timestamp
+   * @returns {boolean} Whether idea can be edited
+   */
+  const canEditIdea = (timestamp) => {
+    const ideaTime = new Date(timestamp);
+    const currentTime = new Date();
+    const diffMs = currentTime - ideaTime;
+    const diffMins = Math.floor(diffMs / 60000);
+    return diffMins < 15; // Can edit within 15 minutes
+  };
+
+  /**
+   * Get time remaining to edit
+   * @param {string} timestamp - Idea timestamp
+   * @returns {string} Time remaining or empty string if expired
+   */
+  const getEditTimeRemaining = (timestamp) => {
+    const ideaTime = new Date(timestamp);
+    const currentTime = new Date();
+    const diffMs = currentTime - ideaTime;
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins >= 15) {
+      return '';
+    }
+
+    const minsLeft = 15 - diffMins;
+    const secsLeft = 60 - (Math.floor((diffMs % 60000) / 1000));
+
+    return `${minsLeft}:${secsLeft.toString().padStart(2, '0')}`;
+  };
+
+  /**
    * Attach event listeners
    */
   const attachEventListeners = () => {
@@ -99,7 +133,7 @@ const IdeaBoardManager = (() => {
     const author = authorSelect.value;
 
     if (!author) {
-      alert('Please select a team member');
+      DialogManager.showAlert('Selection Required', 'Please select a team member');
       return;
     }
 
@@ -107,14 +141,14 @@ const IdeaBoardManager = (() => {
     if (quillEditor) {
       content = quillEditor.root.innerHTML;
       if (content === '<p><br></p>' || content.trim() === '') {
-        alert('Please enter your idea');
+        DialogManager.showAlert('Content Required', 'Please enter your idea');
         return;
       }
     } else {
       const textarea = document.querySelector(selectors.contentEditor);
       content = textarea ? textarea.value : '';
       if (!content.trim()) {
-        alert('Please enter your idea');
+        DialogManager.showAlert('Content Required', 'Please enter your idea');
         return;
       }
     }
@@ -132,8 +166,9 @@ const IdeaBoardManager = (() => {
       }
       state.currentPage = 1;
       renderIdeas();
+      StatsManager.updateStats();
     } else {
-      alert('Failed to add idea');
+      DialogManager.showAlert('Error', 'Failed to add idea');
     }
   };
 
@@ -265,22 +300,34 @@ const IdeaBoardManager = (() => {
 
     const ideasHtml = ideas
       .map(
-        idea => `
-        <div class="idea-card fade-in">
-          <div class="idea-header">
-            <div>
-              <div class="idea-author">${UIUtils.escapeHtml(idea.author)}</div>
-              <div class="idea-time">${UIUtils.formatDate(idea.timestamp)}</div>
-            </div>
-            <button class="btn-icon" onclick="IdeaBoardManager.deleteIdea('${idea.id}')" title="Delete idea">
-              ${getDeleteIconSVG()}
+        idea => {
+          const canEdit = canEditIdea(idea.timestamp);
+          const editBtn = canEdit ? `
+            <button class="btn-edit" onclick="DialogManager.showEditIdea('${idea.id}', '${idea.content.replace(/'/g, "\\'")}')" title="Edit idea">
+              Edit
             </button>
-          </div>
-          <div class="idea-content">
-            ${idea.content}
-          </div>
-        </div>
-      `
+          ` : `<button class="btn-edit expired" title="Edit window expired" disabled>Edit</button>`;
+
+          return `
+            <div class="idea-card fade-in">
+              <div class="idea-header">
+                <div>
+                  <div class="idea-author">${UIUtils.escapeHtml(idea.author)}</div>
+                  <div class="idea-time">${UIUtils.formatDate(idea.timestamp)}</div>
+                </div>
+                <div class="idea-actions">
+                  ${editBtn}
+                  <button class="btn-icon" onclick="IdeaBoardManager.deleteIdea('${idea.id}')" title="Delete idea">
+                    ${getDeleteIconSVG()}
+                  </button>
+                </div>
+              </div>
+              <div class="idea-content">
+                ${idea.content}
+              </div>
+            </div>
+          `;
+        }
       )
       .join('');
 
@@ -305,17 +352,20 @@ const IdeaBoardManager = (() => {
    * @param {string} ideaId - Idea ID
    */
   const deleteIdea = (ideaId) => {
-    if (confirm('Are you sure you want to delete this idea?')) {
-      StorageManager.removeIdea(ideaId);
-      const { totalPages } = getPaginatedIdeas();
+    DialogManager.showConfirm('Delete Idea', 'Are you sure you want to delete this idea?', (confirmed) => {
+      if (confirmed) {
+        StorageManager.removeIdea(ideaId);
+        const { totalPages } = getPaginatedIdeas();
 
-      if (state.currentPage > totalPages && totalPages > 0) {
-        state.currentPage = totalPages;
+        if (state.currentPage > totalPages && totalPages > 0) {
+          state.currentPage = totalPages;
+        }
+
+        renderIdeas();
+        StatsManager.updateStats();
+        UIUtils.showSuccessMessage('Idea deleted');
       }
-
-      renderIdeas();
-      UIUtils.showSuccessMessage('Idea deleted');
-    }
+    });
   };
 
   /**
@@ -351,7 +401,7 @@ const IdeaBoardManager = (() => {
     if (!modalSelect || !modal) return;
 
     if (!modalSelect.value) {
-      alert('Please select your name');
+      DialogManager.showAlert('Selection Required', 'Please select your name');
       return;
     }
 
@@ -379,5 +429,7 @@ const IdeaBoardManager = (() => {
     selectUserFromModal,
     goToAddTeamMember,
     populateFilterDropdown,
+    renderIdeas,
+    canEditIdea,
   };
 })();
