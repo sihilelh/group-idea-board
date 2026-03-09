@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Group Idea Board</title>
+    <title>IdeaKart - Shopping for Ideas</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icons/cart-icon.svg">
 
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/styles.css" />
@@ -32,8 +33,24 @@
     <!-- HEADER -->
     <header class="header">
       <div class="header-content">
-        <h1 class="header-title"><img src="assets/icons/brain-icon.svg" alt="Brain" style="width: 28px; height: 28px; vertical-align: middle; margin-right: 8px;"> Group Idea Board</h1>
-        <p style="color: #ffffff; font-size: 14px">Collaborate and Share Ideas</p>
+        <h1 class="header-title"><img src="assets/icons/cart-icon.svg" alt="Cart" class="logo-icon" style="width: 28px; height: 28px; vertical-align: middle; margin-right: 8px;"> IdeaKart</h1>
+        <p style="color: #ffffff; font-size: 14px">Shopping for Ideas</p>
+        <button id="themeToggle" class="theme-toggle" onclick="ThemeManager.toggleTheme()" title="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </div>
     </header>
 
@@ -129,9 +146,88 @@
           <div id="teamMembersList" class="ideas-list mt-24"></div>
         </div>
       </div>
+
+      <!-- STATISTICS SECTION -->
+      <div id="statsSection" class="stats-section mt-24">
+        <h2 style="margin-bottom: 24px;">Statistics</h2>
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-value" id="totalIdeas">0</div>
+            <div class="stat-label">Total Ideas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="topContributorName">-</div>
+            <div class="stat-label">Top Contributor</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalMembers">0</div>
+            <div class="stat-label">Total Members</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- CUSTOM MODALS & DIALOGS -->
+    <!-- Confirmation Dialog -->
+    <div id="confirmDialog" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="confirmTitle">Confirm Action</h3>
+        </div>
+        <div class="modal-body">
+          <p id="confirmMessage">Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="DialogManager.closeConfirm(false)">Cancel</button>
+          <button class="btn btn-primary" onclick="DialogManager.closeConfirm(true)">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Dialog -->
+    <div id="alertDialog" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="alertTitle">Alert</h3>
+        </div>
+        <div class="modal-body">
+          <p id="alertMessage">Message</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="DialogManager.closeAlert()">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Idea Modal -->
+    <div id="editIdeaModal" class="modal-overlay">
+      <div class="modal-dialog edit-modal">
+        <div class="modal-header">
+          <h3>Edit Idea</h3>
+        </div>
+        <div class="modal-body">
+          <form id="editIdeaForm">
+            <div class="form-group">
+              <label class="form-label">Time Remaining: <span id="editTimeRemaining">15:00</span></label>
+              <div id="editIdeaContent"></div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="DialogManager.closeEditIdea()">Cancel</button>
+          <button class="btn btn-primary" onclick="DialogManager.saveEditedIdea()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <p>&copy; 2026 IdeaKart. All rights reserved.</p>
+        <p>Created By: Group 09</p>
+      </div>
+    </footer>
+
     <!-- Quill Editor -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
@@ -142,6 +238,9 @@
     <!-- Feature Modules -->
     <script src="assets/js/team-members.js"></script>
     <script src="assets/js/idea-board.js"></script>
+    <script src="assets/js/dialog-manager.js"></script>
+    <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/stats-manager.js"></script>
 
     <!-- App Initialization -->
     <script>
@@ -173,9 +272,13 @@
        * Initialize app when DOM is ready
        */
       document.addEventListener('DOMContentLoaded', () => {
+        // Initialize theme
+        ThemeManager.init();
+        
         // Initialize managers
         IdeaBoardManager.init();
         TeamMembersManager.init();
+        StatsManager.init();
 
         // Show user selection modal
         IdeaBoardManager.showUserSelectionModal();

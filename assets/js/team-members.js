@@ -40,7 +40,7 @@ const TeamMembersManager = (() => {
     const name = input.value.trim();
 
     if (!name) {
-      alert('Please enter a team member name');
+      DialogManager.showAlert('Input Required', 'Please enter a team member name');
       return;
     }
 
@@ -52,8 +52,9 @@ const TeamMembersManager = (() => {
       renderTeamMembers();
       updateAuthorDropdown();
       updateFilterDropdown();
+      StatsManager.updateStats();
     } else {
-      alert('Failed to add team member. The name might already exist.');
+      DialogManager.showAlert('Error', 'Failed to add team member. The name might already exist.');
     }
   };
 
@@ -113,14 +114,17 @@ const TeamMembersManager = (() => {
    * @param {string} name - Team member name
    */
   const removeMember = (name) => {
-    if (confirm(`Are you sure you want to remove ${name}? Their ideas will be omitted from the board.`)) {
-      StorageManager.removeTeamMember(name);
-      renderTeamMembers();
-      updateAuthorDropdown();
-      updateFilterDropdown();
-      IdeaBoardManager.resetFilter();
-      UIUtils.showSuccessMessage(`${name} removed. Their ideas have been removed from the board.`);
-    }
+    DialogManager.showConfirm('Remove Member', `Are you sure you want to remove ${name}? Their ideas will be omitted from the board.`, (confirmed) => {
+      if (confirmed) {
+        StorageManager.removeTeamMember(name);
+        renderTeamMembers();
+        updateAuthorDropdown();
+        updateFilterDropdown();
+        IdeaBoardManager.resetFilter();
+        StatsManager.updateStats();
+        UIUtils.showSuccessMessage(`${name} removed. Their ideas have been removed from the board.`);
+      }
+    });
   };
 
   /**
