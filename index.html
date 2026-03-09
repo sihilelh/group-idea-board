@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group Idea Board</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="header-title">🧠 Group Idea Board</h1>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 14px">Collaborate and Share Ideas</p>
+      </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('board')">📋 Idea Board</button>
+        <button class="tab-button" onclick="switchTab('team')">👥 Team Members</button>
+      </div>
+
+      <!-- IDEA BOARD TAB -->
+      <div id="boardContainer" class="tab-content">
+        <!-- Add Idea Form -->
+        <div class="form-container">
+          <h2>Add Your Idea</h2>
+
+          <form id="ideaForm">
+            <div class="form-group">
+              <label class="form-label" for="ideaAuthor">Who are you? *</label>
+              <select id="ideaAuthor" class="form-select" required></select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="ideaContent">Your Idea *</label>
+              <div id="ideaContent"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <span>✨</span>
+              <span>Add Idea</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Sort Controls -->
+        <div id="sortControls" class="sort-controls mt-24">
+          <label for="sortSelect">
+            Sort by:
+            <select id="sortSelect">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="author">Author A-Z</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Ideas List -->
+        <div id="ideasContainer" class="ideas-list"></div>
+
+        <!-- Pagination -->
+        <div id="paginationContainer"></div>
+      </div>
+
+      <!-- TEAM MEMBERS TAB -->
+      <div id="teamContainer" class="tab-content hidden">
+        <!-- Add Team Member Form -->
+        <div class="form-container">
+          <h2>Add Team Member</h2>
+
+          <form id="teamMemberForm">
+            <div class="form-group">
+              <label class="form-label" for="teamMemberInput">Team Member Name *</label>
+              <input
+                type="text"
+                id="teamMemberInput"
+                class="form-input"
+                placeholder="Enter team member name"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <span>➕</span>
+              <span>Add Member</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Team Members List -->
+        <div id="teamMembersContainer">
+          <div id="teamMembersList" class="ideas-list mt-24"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <!-- Quill Editor -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <!-- Utilities -->
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/ui-utils.js"></script>
+
+    <!-- Feature Modules -->
+    <script src="assets/js/team-members.js"></script>
+    <script src="assets/js/idea-board.js"></script>
+
+    <!-- App Initialization -->
+    <script>
+      /**
+       * Tab switching functionality
+       */
+      function switchTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.add('hidden');
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        // Show selected tab
+        if (tabName === 'board') {
+          document.getElementById('boardContainer').classList.remove('hidden');
+          document.querySelectorAll('.tab-button')[0].classList.add('active');
+        } else if (tabName === 'team') {
+          document.getElementById('teamContainer').classList.remove('hidden');
+          document.querySelectorAll('.tab-button')[1].classList.add('active');
+        }
+      }
+
+      /**
+       * Initialize app when DOM is ready
+       */
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize managers
+        IdeaBoardManager.init();
+        TeamMembersManager.init();
+
+        // Show welcome message if first time
+        const ideas = StorageManager.getIdeas();
+        const members = StorageManager.getTeamMembers();
+
+        if (ideas.length === 0 && members.length === 0) {
+          console.log('Welcome to Group Idea Board! Start by adding team members.');
+        }
+      });
+    </script>
+  </body>
+</html>
