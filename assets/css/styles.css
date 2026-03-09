@@ -1,3 +1,6 @@
+/* ===== FONT IMPORTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 /* ===== ROOT VARIABLES ===== */
 :root {
   --primary-color: #6366f1;
@@ -26,7 +29,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1f35 100%);
   color: var(--text-primary);
   line-height: 1.6;
@@ -107,6 +110,11 @@ body {
   font-weight: 500;
   font-size: 14px;
   color: var(--text-primary);
+}
+
+.form-label .required {
+  color: var(--danger-color);
+  font-weight: 600;
 }
 
 .form-input,
@@ -228,6 +236,29 @@ body {
   font-size: 12px;
 }
 
+.btn-icon {
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: var(--danger-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 6px;
+}
+
+.btn-icon:hover {
+  background: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -279,6 +310,11 @@ body {
   font-weight: 600;
   color: var(--primary-color);
   font-size: 16px;
+}
+
+.idea-author.deleted {
+  color: var(--text-tertiary);
+  font-style: italic;
 }
 
 .idea-time {
@@ -393,6 +429,55 @@ body {
   cursor: pointer;
 }
 
+/* ===== FILTER CONTROLS ===== */
+.filter-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.filter-controls select {
+  padding: 8px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-controls select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-controls button {
+  padding: 8px 12px;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-controls button:hover {
+  background: #4f46e5;
+}
+
 /* ===== EMPTY STATE ===== */
 .empty-state {
   text-align: center;
@@ -432,6 +517,91 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ===== MODAL STYLES ===== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modal-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.modal-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.modal-body {
+  margin-bottom: 24px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-footer button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-footer button.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.modal-footer button.btn-primary:hover {
+  background: #4f46e5;
+}
+
+.modal-footer button.btn-secondary {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.modal-footer button.btn-secondary:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 /* ===== RESPONSIVE ===== */

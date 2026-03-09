@@ -1,6 +1,6 @@
 /**
  * Idea Board Management Module
- * Handles displaying ideas with pagination and sorting
+ * Handles displaying ideas with pagination, sorting, and filtering
  */
 
 const IdeaBoardManager = (() => {
@@ -12,13 +12,17 @@ const IdeaBoardManager = (() => {
     paginationContainer: '#paginationContainer',
     sortContainer: '#sortControls',
     boardContainer: '#boardContainer',
+    filterSelect: '#filterSelect',
+    userSelectModal: '#userSelectModal',
+    modalUserSelect: '#modalUserSelect',
   };
 
   const state = {
     currentPage: 1,
     itemsPerPage: 5,
-    sortBy: 'newest', // newest or oldest
-    ideas: [],
+    sortBy: 'newest',
+    filterByUser: '',
+    currentUser: null,
   };
 
   let quillEditor = null;
@@ -31,6 +35,7 @@ const IdeaBoardManager = (() => {
     attachEventListeners();
     renderIdeas();
     populateAuthorDropdown();
+    populateFilterDropdown();
   };
 
   /**
@@ -72,6 +77,15 @@ const IdeaBoardManager = (() => {
         renderIdeas();
       });
     }
+
+    const filterSelect = document.querySelector(selectors.filterSelect);
+    if (filterSelect) {
+      filterSelect.addEventListener('change', (e) => {
+        state.filterByUser = e.target.value;
+        state.currentPage = 1;
+        renderIdeas();
+      });
+    }
   };
 
   /**
@@ -92,13 +106,11 @@ const IdeaBoardManager = (() => {
     let content = '';
     if (quillEditor) {
       content = quillEditor.root.innerHTML;
-      // Check if content is empty (only has default paragraph)
       if (content === '<p><br></p>' || content.trim() === '') {
         alert('Please enter your idea');
         return;
       }
     } else {
-      // Fallback if Quill is not loaded
       const textarea = document.querySelector(selectors.contentEditor);
       content = textarea ? textarea.value : '';
       if (!content.trim()) {
@@ -126,7 +138,7 @@ const IdeaBoardManager = (() => {
   };
 
   /**
-   * Populate author dropdown
+   * Populate author dropdown with active team members only
    */
   const populateAuthorDropdown = () => {
     const members = StorageManager.getTeamMembers();
@@ -134,11 +146,54 @@ const IdeaBoardManager = (() => {
   };
 
   /**
-   * Get sorted ideas
-   * @returns {Array} Sorted ideas
+   * Populate filter dropdown with active team members
+   */
+  const populateFilterDropdown = () => {
+    const members = StorageManager.getTeamMembers();
+    const filterSelect = document.querySelector(selectors.filterSelect);
+    
+    if (!filterSelect) return;
+
+    // Clear previous options
+    filterSelect.innerHTML = '<option value="">All Users</option>';
+
+    // Add team member options
+    members.forEach(member => {
+      const option = document.createElement('option');
+      option.value = member;
+      option.textContent = member;
+      filterSelect.appendChild(option);
+    });
+  };
+
+  /**
+   * Reset filter
+   */
+  const resetFilter = () => {
+    state.filterByUser = '';
+    state.currentPage = 1;
+    const filterSelect = document.querySelector(selectors.filterSelect);
+    if (filterSelect) {
+      filterSelect.value = '';
+    }
+    renderIdeas();
+  };
+
+  /**
+   * Get sorted ideas with filter applied
+   * @returns {Array} Filtered and sorted ideas
    */
   const getSortedIdeas = () => {
-    const ideas = StorageManager.getIdeas();
+    let ideas = StorageManager.getIdeas();
+    
+    // Apply filter - exclude deleted users from results
+    if (state.filterByUser) {
+      ideas = ideas.filter(idea => idea.author === state.filterByUser);
+    } else {
+      // When showing all, filter out deleted users (ideas from removed team members)
+      const activeMembers = StorageManager.getTeamMembers();
+      ideas = ideas.filter(idea => activeMembers.includes(idea.author));
+    }
 
     return [...ideas].sort((a, b) => {
       if (state.sortBy === 'newest') {
@@ -153,8 +208,8 @@ const IdeaBoardManager = (() => {
   };
 
   /**
-   * Get paginated ideas
-   * @returns {Array} Paginated ideas
+   * Get paginated ideas (with all filters applied)
+   * @returns {Object} Paginated ideas and pagination info
    */
   const getPaginatedIdeas = () => {
     const allIdeas = getSortedIdeas();
@@ -169,7 +224,20 @@ const IdeaBoardManager = (() => {
   };
 
   /**
-   * Render ideas
+   * Get delete icon SVG
+   * @returns {string} SVG string for delete icon
+   */
+  const getDeleteIconSVG = () => {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      <line x1="10" y1="11" x2="10" y2="17"></line>
+      <line x1="14" y1="11" x2="14" y2="17"></line>
+    </svg>`;
+  };
+
+  /**
+   * Render ideas with applied filters and sorting
    */
   const renderIdeas = () => {
     const { ideas, totalPages, total } = getPaginatedIdeas();
@@ -181,9 +249,11 @@ const IdeaBoardManager = (() => {
     if (total === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">💡</div>
+          <div class="empty-state-icon">
+            <img src="assets/icons/lightbulb-icon.svg" alt="No ideas" style="width: 48px; height: 48px; opacity: 0.5;">
+          </div>
           <h3>No ideas yet</h3>
-          <p>Add your first idea to get started</p>
+          <p>${state.filterByUser ? 'No ideas from this user' : 'Add your first idea to get started'}</p>
         </div>
       `;
 
@@ -202,8 +272,8 @@ const IdeaBoardManager = (() => {
               <div class="idea-author">${UIUtils.escapeHtml(idea.author)}</div>
               <div class="idea-time">${UIUtils.formatDate(idea.timestamp)}</div>
             </div>
-            <button class="btn btn-sm" onclick="IdeaBoardManager.deleteIdea('${idea.id}')">
-              Delete
+            <button class="btn-icon" onclick="IdeaBoardManager.deleteIdea('${idea.id}')" title="Delete idea">
+              ${getDeleteIconSVG()}
             </button>
           </div>
           <div class="idea-content">
@@ -221,7 +291,6 @@ const IdeaBoardManager = (() => {
       const paginationElement = UIUtils.createPagination(state.currentPage, totalPages, (page) => {
         state.currentPage = page;
         renderIdeas();
-        // Scroll to ideas
         document.querySelector(selectors.ideasContainer)?.scrollIntoView({ behavior: 'smooth' });
       });
       paginationContainer.innerHTML = '';
@@ -240,7 +309,6 @@ const IdeaBoardManager = (() => {
       StorageManager.removeIdea(ideaId);
       const { totalPages } = getPaginatedIdeas();
 
-      // Adjust current page if needed
       if (state.currentPage > totalPages && totalPages > 0) {
         state.currentPage = totalPages;
       }
@@ -250,8 +318,66 @@ const IdeaBoardManager = (() => {
     }
   };
 
+  /**
+   * Show user selection modal on page load
+   */
+  const showUserSelectionModal = () => {
+    const modal = document.querySelector(selectors.userSelectModal);
+    const members = StorageManager.getTeamMembers();
+    const modalSelect = document.querySelector(selectors.modalUserSelect);
+
+    if (!modal || !modalSelect) return;
+
+    // Populate modal dropdown
+    modalSelect.innerHTML = '<option value="">Select a name...</option>';
+    members.forEach(member => {
+      const option = document.createElement('option');
+      option.value = member;
+      option.textContent = member;
+      modalSelect.appendChild(option);
+    });
+
+    // Show modal
+    modal.classList.add('show');
+  };
+
+  /**
+   * Select user from modal
+   */
+  const selectUserFromModal = () => {
+    const modalSelect = document.querySelector(selectors.modalUserSelect);
+    const modal = document.querySelector(selectors.userSelectModal);
+
+    if (!modalSelect || !modal) return;
+
+    if (!modalSelect.value) {
+      alert('Please select your name');
+      return;
+    }
+
+    state.currentUser = modalSelect.value;
+    modal.classList.remove('show');
+  };
+
+  /**
+   * Go to add team member page
+   */
+  const goToAddTeamMember = () => {
+    const modal = document.querySelector(selectors.userSelectModal);
+    if (modal) {
+      modal.classList.remove('show');
+    }
+    // Switch to team tab
+    switchTab('team');
+  };
+
   return {
     init,
     deleteIdea,
+    resetFilter,
+    showUserSelectionModal,
+    selectUserFromModal,
+    goToAddTeamMember,
+    populateFilterDropdown,
   };
 })();
