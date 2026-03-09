@@ -10,3 +10,17 @@ Constraints:
 - Add team members screen should be in a seperate tab
 - Team member form also needs to have a team member name input and a button to store them to the local host.
 - Ideas should be in list card style and it should be paginated and sortable. 
+
+# Prompt 02
+
+Goal: Improve Appearance of this website
+
+Context: 
+Change font to Poppins.
+Make "Collaborate and Share Ideas" the same font colour as the "Group Idea Board"
+when the team member is removed, in the idea card the name should show as "deleted user" and those should be omitted for search/filter results.
+Required "*" should be in red color
+Add a Filter by User element and it's functionality.
+Replace the word "Delete" and "Remove" by a red delete icon using an svg file.
+Replace emojis with svg icons.
+When user opens the page they should be prompted with a html css prompt to ask "Who are you" and add a button to redirect the user to add team member page if he is not in the list.
