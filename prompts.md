@@ -24,3 +24,10 @@ Add a Filter by User element and it's functionality.
 Replace the word "Delete" and "Remove" by a red delete icon using an svg file.
 Replace emojis with svg icons.
 When user opens the page they should be prompted with a html css prompt to ask "Who are you" and add a button to redirect the user to add team member page if he is not in the list.
+
+# Prompt 3
+
+Goal : Adding Additional UI Elements
+
+Context : Create a toggle button to switch between light mode and dark mode. All logos should be change when the theme changes as well. Edit the name to "IdeaKart" and create a svg cart icon as the header logo and the favicon. Also use "Shopping for Ideas" as the slogan. Ideas should be editable within first 15 mins. Create a badge system where most posts posted person should have a "Top Contributor" badge. And the website should be mobile responsive. You should also add a footer and that should include "Created By: Group 09" and copyrights texts. Also add a section with 3 small cards to display "Total Ideas", "Top Contributor", and "Total Members". Replace all the "alerts()" and "dialog()" functions with custom designed css dialogs and alerts.
+
