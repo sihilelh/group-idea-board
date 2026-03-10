@@ -1,0 +1,153 @@
+.header,
+.sidebar,
+.tabs,
+.form-container,
+.tab-content,
+.stats-section,
+.stat-card,
+.footer {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.header {
+  animation-delay: 0.05s;
+}
+
+.sidebar {
+  transform: translateX(-20px);
+  animation-name: slideInLeftSoft;
+  animation-delay: 0.1s;
+}
+
+.tabs,
+.form-container {
+  animation-delay: 0.2s;
+}
+
+.tab-content {
+  animation-delay: 0.25s;
+}
+
+.stats-section {
+  animation-delay: 0.3s;
+}
+
+.stat-card:nth-child(1) {
+  animation-delay: 0.35s;
+}
+
+.stat-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.stat-card:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.footer {
+  animation-delay: 0.5s;
+}
+
+/* Page-specific animations */
+.my-schedule-header,
+.my-schedule-layout {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.my-schedule-header {
+  animation-delay: 0.2s;
+}
+
+.my-schedule-layout {
+  animation-delay: 0.25s;
+}
+
+.my-schedule-calendar,
+.today-events-card {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.my-schedule-calendar {
+  animation-delay: 0.3s;
+}
+
+.today-events-card {
+  animation-delay: 0.35s;
+}
+
+.pomodoro-page,
+.pomodoro-timer-section,
+.pomodoro-analytics-section {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.pomodoro-page {
+  animation-delay: 0.2s;
+}
+
+.pomodoro-timer-section {
+  animation-delay: 0.25s;
+}
+
+.pomodoro-analytics-section {
+  animation-delay: 0.3s;
+}
+
+.pomodoro-analytics-card {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.pomodoro-analytics-card:nth-child(1) {
+  animation-delay: 0.35s;
+}
+
+.pomodoro-analytics-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.pomodoro-analytics-card:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.gpa-course-table {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.gpa-course-table[style*="display: table"] {
+  animation-delay: 0.1s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeftSoft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
