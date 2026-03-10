@@ -2,6 +2,7 @@
 
 Goal: Update the header to have a sidebar as well
 Context: Currently this application only have a header only. You have to create a sidebar as well while keeping the header as it is. Sidebar should have these navigation items: "IdeaKart", "GPA Caluclator", "
+<<<<<<< HEAD
 
 # GPA Calculator Prompt
 
@@ -29,3 +30,16 @@ Instead of "+Add Course to List" button, add a small green fit-to-content button
 Instead of "Calculate Overall GPA" button, add a small blue fit-to-content button "Calculate" in the right side.
 Change the font colour of the overall gpa and its output to green. 
 Create a delete function so that you can delete each row if necessary. The delete icon should only display when the user hovers to the specific row. 
+=======
+# Task 02
+Pomodor calculator
+Below is a self-contained HTML/CSS/JS Pomodoro widget you can drop into a dashboard. It meets your requirements and uses only HTML, CSS and JavaScript. The UI includes a dynamic animated gradient background and a circular progress display.
+
+Key features:
+
+25-minute countdown timer
+Start/Pause button (Start required; click again to pause)
+Reset button
+Bell sound and browser notification when the timer reaches zero
+Animated, dynamic gradient background for a visually attractive look
+>>>>>>> f5240e3c26064ee99d9c641fe016594295f52712
