@@ -85,9 +85,37 @@
         <div class="container">
           <div class="form-container">
             <h2>GPA Calculator</h2>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
-              This tool will help you calculate your GPA. (Implementation placeholder)
-            </p>
+            
+            <div class="gpa-input-row">
+              <div class="form-group gpa-input-group">
+                <label class="form-label">Credits</label>
+                <input type="number" id="credits" class="form-input" placeholder="e.g. 3">
+              </div>
+              <div class="form-group gpa-input-group">
+                <label class="form-label">Grade</label>
+                <input type="text" id="grade" class="form-input" placeholder="e.g. A+">
+              </div>
+              <button class="btn btn-primary gpa-btn-add" onclick="addCourse()" title="Add Course">+</button>
+            </div>
+
+            <div id="errorDisplay" class="gpa-error-container"></div>
+
+            <table id="courseTable" class="gpa-course-table" style="display: none;">
+              <thead>
+                <tr>
+                  <th>Course Number</th>
+                  <th>Credits</th>
+                  <th>Grade</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+
+            <div class="gpa-footer-row">
+              <button class="btn btn-primary" onclick="calculateFinalGPA()">Calculate</button>
+            </div>
+
+            <div id="finalResult" class="gpa-result"></div>
           </div>
         </div>
       </main>
@@ -118,6 +146,101 @@
         toggleBtn.setAttribute('aria-expanded', 'false');
       }
 
+      // GPA Calculator functionality
+      let courses = [];
+      const gradeScale = {
+        'A+': 4.0, 'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+        'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'D-': 0.7, 'E': 0.0
+      };
+
+      function addCourse() {
+        const creditInput = document.getElementById('credits');
+        const gradeInput = document.getElementById('grade');
+        const errorDisplay = document.getElementById('errorDisplay');
+        
+        let errors = [];
+        const credits = parseInt(creditInput.value);
+        const gradeRaw = gradeInput.value.trim().toUpperCase();
+
+        if (isNaN(credits) || credits <= 0) {
+          errors.push("Credits must be an integer > 0.");
+        }
+        if (!gradeScale.hasOwnProperty(gradeRaw)) {
+          errors.push("Grade must be A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, or E.");
+        }
+
+        if (errors.length > 0) {
+          errorDisplay.innerHTML = errors.join("<br>");
+          return;
+        }
+
+        errorDisplay.innerHTML = "";
+        courses.push({ credits, grade: gradeRaw, point: gradeScale[gradeRaw] });
+        updateTable();
+
+        creditInput.value = "";
+        gradeInput.value = "";
+        creditInput.focus();
+      }
+
+      function updateTable() {
+        const table = document.getElementById('courseTable');
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        
+        if (courses.length > 0) table.style.display = "table";
+
+        courses.forEach((course, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${course.credits}</td>
+            <td class="gpa-grade-cell">
+              ${course.grade}
+              <button class="btn-icon gpa-delete-btn" onclick="deleteRow(${index})" title="Delete Course">
+                <svg class="gpa-bin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      function deleteRow(index) {
+        courses.splice(index, 1);
+        if (courses.length === 0) {
+          document.getElementById('courseTable').style.display = "none";
+          const resultDiv = document.getElementById('finalResult');
+          resultDiv.style.display = "none";
+          resultDiv.className = "gpa-result";
+        }
+        updateTable();
+      }
+
+      function calculateFinalGPA() {
+        const resultDiv = document.getElementById('finalResult');
+        if (courses.length === 0) {
+          resultDiv.style.display = "block";
+          resultDiv.innerHTML = "Add courses first!";
+          resultDiv.className = "gpa-result gpa-result-error";
+          return;
+        }
+
+        let totalPoints = 0;
+        let totalCredits = 0;
+        courses.forEach(c => {
+          totalPoints += (c.point * c.credits);
+          totalCredits += c.credits;
+        });
+
+        const gpa = totalPoints / totalCredits;
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `Overall GPA: ${gpa.toFixed(2)}`;
+        resultDiv.className = "gpa-result gpa-result-success";
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         ThemeManager.init();
 
@@ -140,6 +263,17 @@
             }
           });
         });
+
+        // Add Enter key support for GPA calculator inputs
+        const creditInput = document.getElementById('credits');
+        const gradeInput = document.getElementById('grade');
+        if (creditInput && gradeInput) {
+          [creditInput, gradeInput].forEach(input => {
+            input.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') addCourse();
+            });
+          });
+        }
       });
     </script>
   </body>

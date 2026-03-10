@@ -316,9 +316,6 @@ body.sidebar-open .sidebar-backdrop {
 }
 
 /* ===== FORM STYLES ===== */
-.form-group {
-  margin-bottom: 24px;
-}
 
 .form-label {
   display: block;
@@ -1386,6 +1383,158 @@ body.sidebar-open .sidebar-backdrop {
     opacity: 0;
   }
   to {
+    opacity: 1;
+  }
+}
+
+/* ===== GPA CALCULATOR SPECIFIC STYLES ===== */
+.gpa-input-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+
+.gpa-input-group {
+  flex: 1;
+}
+
+.gpa-btn-add {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gpa-error-container {
+  color: var(--danger-color);
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  min-height: 40px;
+  line-height: 1.5;
+  padding: 8px 0;
+}
+
+.gpa-course-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  background: var(--card-bg);
+}
+
+.gpa-course-table thead {
+  background: var(--input-bg);
+}
+
+.gpa-course-table th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.gpa-course-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.gpa-grade-cell {
+  position: relative;
+}
+
+.gpa-delete-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  padding: 6px;
+}
+
+.gpa-delete-btn:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.gpa-course-table tr:hover .gpa-delete-btn {
+  opacity: 1;
+}
+
+.gpa-bin-icon {
+  width: 18px;
+  height: 18px;
+  stroke: var(--danger-color);
+}
+
+.gpa-footer-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.gpa-result {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: none;
+  padding: 16px;
+  border-radius: var(--border-radius);
+}
+
+.gpa-result-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
+  display: block;
+}
+
+.gpa-result-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .gpa-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gpa-btn-add {
+    width: 100%;
+    height: 44px;
+  }
+
+  .gpa-course-table {
+    font-size: 0.8rem;
+  }
+
+  .gpa-course-table th,
+  .gpa-course-table td {
+    padding: 8px 4px;
+  }
+
+  .gpa-delete-btn {
+    position: static;
+    transform: none;
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  .gpa-course-table tr:hover .gpa-delete-btn {
     opacity: 1;
   }
 }
