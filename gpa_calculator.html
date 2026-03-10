@@ -1,73 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick GPA Calculator</title>
+    <title>Cumulative GPA Calculator</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding: 20px; background-color: #f4f4f9; }
-        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { color: #333; margin-top: 0; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        #result { margin-top: 20px; font-weight: bold; font-size: 1.2rem; text-align: center; color: #28a745; }
-        .error { color: #dc3545; font-size: 0.9rem; margin-top: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 40px; background-color: #eef2f3; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 1.5rem; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .input-group { flex: 1; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666; }
+        input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; transition: border-color 0.3s; }
+        input:focus { border-color: #3498db; outline: none; }
+        
+        .btn-add { background-color: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-calc { background-color: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
+        #courseList { margin: 20px 0; border-top: 1px solid #eee; padding-top: 10px; }
+        .course-entry { padding: 8px; border-bottom: 1px solid #fafafa; font-size: 0.95rem; color: #444; }
+        .error-box { color: #e74c3c; font-size: 0.85rem; margin-top: 10px; line-height: 1.4; min-height: 20px; }
+        #finalResult { margin-top: 20px; text-align: center; font-size: 1.4rem; color: #2c3e50; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
     <h2>GPA Calculator 🎓</h2>
     
-    <div class="input-group">
-        <label for="credits">Course Credits (Integer > 0)</label>
-        <input type="number" id="credits" placeholder="e.g. 3" min="1" required>
+    <div class="input-row">
+        <div class="input-group">
+            <label>Credits</label>
+            <input type="number" id="credits" placeholder="e.g. 3">
+        </div>
+        <div class="input-group">
+            <label>Grade</label>
+            <input type="text" id="grade" placeholder="e.g. A+">
+        </div>
     </div>
 
-    <div class="input-group">
-        <label for="grade">Grade (A+, A, B-, etc.)</label>
-        <input type="text" id="grade" placeholder="e.g. A-" required>
-    </div>
+    <div id="errorDisplay" class="error-box"></div>
 
-    <button onclick="calculateGPA()">Calculate GPA</button>
+    <button class="btn-add" onclick="addCourse()">+ Add Course to List</button>
+    
+    <div id="courseList">
+        </div>
 
-    <div id="result"></div>
+    <button class="btn-calc" onclick="calculateFinalGPA()">Calculate Overall GPA</button>
+
+    <div id="finalResult"></div>
 </div>
 
 <script>
-    function calculateGPA() {
-        const creditInput = document.getElementById('credits').value;
-        const gradeInput = document.getElementById('grade').value.toUpperCase().trim();
-        const resultDiv = document.getElementById('result');
+    let courses = [];
+    const gradeScale = {
+        'A+': 4.0, 'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+        'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'D-': 0.7, 'E': 0.0
+    };
+
+    function addCourse() {
+        const creditInput = document.getElementById('credits');
+        const gradeInput = document.getElementById('grade');
+        const errorDisplay = document.getElementById('errorDisplay');
         
-        // Grade Scale Mapping
-        const gradeScale = {
-            'A+': 4.0, 'A': 4.0, 'A-': 3.7,
-            'B+': 3.3, 'B': 3.0, 'B-': 2.7,
-            'C+': 2.3, 'C': 2.0, 'C-': 1.7,
-            'D+': 1.3, 'D': 1.0, 'D-': 0.7,
-            'E': 0.0
-        };
+        let errors = [];
+        const credits = parseInt(creditInput.value);
+        const grade = gradeInput.value.trim(); // No .toUpperCase() to enforce strict casing
 
-        const credits = parseInt(creditInput);
-
-        // Validation
+        // Validation Logic
         if (isNaN(credits) || credits <= 0) {
-            resultDiv.innerHTML = '<span class="error">Please enter a valid credit integer > 0.</span>';
+            errors.push("• Credits must be an integer greater than 0.");
+        }
+        if (!gradeScale.hasOwnProperty(grade)) {
+            errors.push("• Grade must be one of: A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, E (Case Sensitive).");
+        }
+
+        if (errors.length > 0) {
+            errorDisplay.innerHTML = errors.join("<br>");
             return;
         }
 
-        if (!gradeScale.hasOwnProperty(gradeInput)) {
-            resultDiv.innerHTML = '<span class="error">Invalid grade. Use A+, A, A-, B+, etc.</span>';
+        // Clear errors and add course
+        errorDisplay.innerHTML = "";
+        const course = { credits: credits, grade: grade, point: gradeScale[grade] };
+        courses.push(course);
+
+        // Display the list item
+        const list = document.getElementById('courseList');
+        const entry = document.createElement('div');
+        entry.className = 'course-entry';
+        entry.innerHTML = `<strong>Course ${courses.length}:</strong> ${credits} Credits — Grade: ${grade}`;
+        list.appendChild(entry);
+
+        // Reset inputs for next entry
+        creditInput.value = "";
+        gradeInput.value = "";
+        creditInput.focus();
+    }
+
+    function calculateFinalGPA() {
+        if (courses.length === 0) {
+            document.getElementById('finalResult').innerHTML = "Add some courses first!";
             return;
         }
 
-        // Calculation
-        const gpa = gradeScale[gradeInput];
-        resultDiv.innerHTML = `Your GPA for this course is: ${gpa.toFixed(2)}`;
+        let totalPoints = 0;
+        let totalCredits = 0;
+
+        courses.forEach(c => {
+            totalPoints += (c.point * c.credits);
+            totalCredits += c.credits;
+        });
+
+        const gpa = totalPoints / totalCredits;
+        document.getElementById('finalResult').innerHTML = `Overall GPA: ${gpa.toFixed(2)}`;
     }
 </script>
 
