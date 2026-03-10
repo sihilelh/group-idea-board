@@ -30,9 +30,9 @@ Requirements for that timer are as follows:
 ○ A Start button
 ○ A Reset button
 ○ When the timer reaches zero, a bell sound or notification should appear.
+○ A designated window for analytics with activity summary, total focus time according to the pausing and resetting timer data.
 
-
-Constraints: You can enhance the visual appearance and interaction of the dashboard by adding smooth fade-in animations so that sections appear gradually when the page loads.
+Constraints: Only use HTML, CSS and JavaScript. You can enhance the visual appearance and interaction of the dashboard by adding smooth fade-in animations so that sections appear gradually when the page loads.
 
 Remember that the overall color theme should match UCSC(University of Colombo School of Computing) branding colors:
 ■ Maroon
@@ -41,3 +41,4 @@ Remember that the overall color theme should match UCSC(University of Colombo Sc
 The website should also be mobile responsive.
 
 Can you generate the relevant code files required to build the timer?
+Take reference from the attached image.
