@@ -30,28 +30,51 @@ const Timer = {
         this.loadData();
         this.updateDisplay();
         this.updateAnalytics();
+        this.updateTabButtons(); // Highlight the correct tab on load
     },
 
     /**
      * Set timer mode (pomodoro, short-break, long-break)
+     * @param {string} mode - Timer mode to set
+     * @param {Event} evt - Optional click event for tab button highlighting
      */
-    setMode(mode) {
+    setMode(mode, evt) {
         if (this.isRunning) return;
 
         this.currentMode = mode;
         this.timeRemaining = this.durations[mode];
         this.updateDisplay();
-        this.updateTabButtons();
+        this.updateTabButtons(evt);
     },
 
     /**
      * Update active tab button
+     * @param {Event} evt - Optional click event to identify the clicked button
      */
-    updateTabButtons() {
+    updateTabButtons(evt) {
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        event.target.classList.add('active');
+        
+        // If event provided, use its target; otherwise find button by mode text
+        if (evt && evt.target) {
+            evt.target.classList.add('active');
+        } else {
+            // Fallback: find button by matching text content
+            const modeLabels = {
+                'pomodoro': 'Pomodoro',
+                'short-break': 'Short Break',
+                'long-break': 'Long Break'
+            };
+            const label = modeLabels[this.currentMode];
+            if (label) {
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.textContent.trim() === label) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
     },
 
     /**
@@ -177,7 +200,7 @@ const Timer = {
         document.getElementById('timerSeconds').textContent = String(seconds).padStart(2, '0');
 
         // Update page title
-        document.title = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} - Student Toolkit`;
+        document.title = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} - ScholarKit`;
     },
 
     /**

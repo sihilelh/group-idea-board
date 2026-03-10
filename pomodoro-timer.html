@@ -82,16 +82,90 @@
       <div class="sidebar-backdrop" aria-hidden="true"></div>
 
       <main class="main-content">
-        <div class="container">
-          <div class="form-container">
-            <h2>Pomodoro Timer</h2>
-            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
-              This tool will help you manage focused study sessions. (Implementation placeholder)
-            </p>
-          </div>
+        <div class="container pomodoro-page">
+          <!-- TIMER SECTION -->
+          <section class="pomodoro-timer-section">
+            <div class="pomodoro-timer-container">
+              <h2 class="pomodoro-timer-title">Pomodoro Study Timer</h2>
+              
+              <!-- Timer Mode Tabs -->
+              <div class="pomodoro-timer-tabs">
+                <button class="tab-btn active" onclick="Timer.setMode('pomodoro', event)">Pomodoro</button>
+                <button class="tab-btn" onclick="Timer.setMode('short-break', event)">Short Break</button>
+                <button class="tab-btn" onclick="Timer.setMode('long-break', event)">Long Break</button>
+              </div>
+              
+              <!-- Timer Display -->
+              <div class="pomodoro-timer-display-area">
+                <div class="pomodoro-timer-circle">
+                  <span id="timerMinutes" class="pomodoro-timer-time">25</span>
+                  <span class="pomodoro-timer-separator">:</span>
+                  <span id="timerSeconds" class="pomodoro-timer-time">00</span>
+                </div>
+              </div>
+
+              <!-- Status Message -->
+              <div class="pomodoro-timer-status">
+                <p id="statusText">Ready to focus?</p>
+              </div>
+
+              <!-- Control Buttons -->
+              <div class="pomodoro-timer-controls">
+                <button id="startBtn" class="btn btn-primary" onclick="Timer.start()">
+                  ▶ START
+                </button>
+                <button id="pauseBtn" class="btn btn-secondary" onclick="Timer.pause()" style="display: none;">
+                  ⏸ PAUSE
+                </button>
+                <button id="resetBtn" class="btn btn-danger" onclick="Timer.reset()">
+                  ↺ RESET
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ANALYTICS SECTION -->
+          <section class="pomodoro-analytics-section">
+            <div class="pomodoro-analytics-container">
+              <div class="pomodoro-analytics-header">
+                <h3 class="pomodoro-analytics-title">📊 Focus Analytics</h3>
+              </div>
+
+              <!-- Analytics Grid -->
+              <div class="pomodoro-analytics-grid">
+                <div class="pomodoro-analytics-card">
+                  <div class="pomodoro-analytics-label">Total Focus Time</div>
+                  <div class="pomodoro-analytics-value" id="totalFocusTime">0m</div>
+                </div>
+                <div class="pomodoro-analytics-card">
+                  <div class="pomodoro-analytics-label">Sessions Completed</div>
+                  <div class="pomodoro-analytics-value" id="sessionsCount">0</div>
+                </div>
+                <div class="pomodoro-analytics-card">
+                  <div class="pomodoro-analytics-label">Today's Goal</div>
+                  <div class="pomodoro-analytics-value">120m</div>
+                </div>
+              </div>
+
+              <!-- Activity Summary -->
+              <div class="pomodoro-activity-section">
+                <h4 class="pomodoro-activity-title">Activity Summary</h4>
+                <div class="pomodoro-activity-log">
+                  <div id="activityList" class="pomodoro-activity-list">
+                    <p class="pomodoro-empty-state">No active sessions yet. Start studying!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </div>
+
+    <!-- Audio notification element -->
+    <audio id="timerSound" preload="auto">
+      <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBg==" type="audio/wav">
+    </audio>
 
     <footer class="footer">
       <div class="footer-content">
@@ -101,6 +175,7 @@
 
     <script src="assets/js/ui-utils.js"></script>
     <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/timer.js"></script>
 
     <script>
       function toggleSidebar() {
