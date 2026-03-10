@@ -3,33 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ScholarKit - Tools for Students</title>
+    <title>ScholarKit - My Schedule</title>
     <link rel="icon" type="image/svg+xml" href="assets/icons/cart-icon.svg">
 
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/styles.css" />
 
-    <!-- Quill Rich Text Editor -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <!-- FullCalendar for My Schedule -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
   </head>
   <body>
-    <!-- WHO ARE YOU MODAL -->
-    <div id="userSelectModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Who are you?</h2>
-          <p>Select your name from the list or add yourself as a new team member</p>
-        </div>
-        <div class="modal-body">
-          <select id="modalUserSelect" class="form-select" style="width: 100%; padding: 12px; margin-bottom: 16px;"></select>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-primary" onclick="IdeaBoardManager.selectUserFromModal()">Continue</button>
-          <button class="btn-secondary" onclick="IdeaBoardManager.goToAddTeamMember()">Add Team Member</button>
-        </div>
-      </div>
-    </div>
-
     <!-- HEADER -->
     <header class="header">
       <div class="header-content">
@@ -71,7 +58,7 @@
           <h2 class="sidebar-title">ScholarKit</h2>
         </div>
         <nav class="sidebar-nav">
-          <a class="sidebar-item active" href="index.html" aria-current="page">
+          <a class="sidebar-item" href="index.html">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
@@ -92,7 +79,7 @@
             </svg>
             <span>Pomodoro Timer</span>
           </a>
-          <a class="sidebar-item" href="my-schedule.html">
+          <a class="sidebar-item active" href="my-schedule.html" aria-current="page">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -110,114 +97,33 @@
       <!-- MAIN CONTENT -->
       <main class="main-content">
         <div class="container">
-      <!-- TABS -->
-      <div class="tabs">
-        <button class="tab-button active" onclick="switchTab('board')"><img src="assets/icons/clipboard-icon.svg" alt="Board" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 6px;"> Idea Board</button>
-        <button class="tab-button" onclick="switchTab('team')"><img src="assets/icons/people-icon.svg" alt="Team" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 6px;"> Team Members</button>
-      </div>
-
-      <!-- IDEA BOARD TAB -->
-      <div id="boardContainer" class="tab-content">
-        <!-- Add Idea Form -->
-        <div class="form-container">
-          <h2>Add Your Idea</h2>
-
-          <form id="ideaForm">
-            <div class="form-group">
-              <label class="form-label" for="ideaAuthor">Who are you? <span class="required">*</span></label>
-              <select id="ideaAuthor" class="form-select" required></select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="ideaContent">Your Idea <span class="required">*</span></label>
-              <div id="ideaContent"></div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <img src="assets/icons/star-icon.svg" alt="Add" style="width: 16px; height: 16px; vertical-align: middle;">
-              <span>Add Idea</span>
-            </button>
-          </form>
-        </div>
-
-        <!-- Sort Controls -->
-        <div id="sortControls" class="sort-controls mt-24">
-          <label for="sortSelect">
-            Sort by:
-            <select id="sortSelect">
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="author">Author A-Z</option>
-            </select>
-          </label>
-        </div>
-
-        <!-- Filter Controls -->
-        <div id="filterControls" class="filter-controls">
-          <label for="filterSelect">
-            Filter by User:
-            <select id="filterSelect">
-              <option value="">All Users</option>
-            </select>
-          </label>
-          <button onclick="IdeaBoardManager.resetFilter()" type="button">Reset Filter</button>
-        </div>
-
-        <!-- Ideas List -->
-        <div id="ideasContainer" class="ideas-list"></div>
-
-        <!-- Pagination -->
-        <div id="paginationContainer"></div>
-      </div>
-
-      <!-- TEAM MEMBERS TAB -->
-      <div id="teamContainer" class="tab-content hidden">
-        <!-- Add Team Member Form -->
-        <div class="form-container">
-          <h2>Add Team Member</h2>
-
-          <form id="teamMemberForm">
-            <div class="form-group">
-              <label class="form-label" for="teamMemberInput">Team Member Name <span class="required">*</span></label>
-              <input
-                type="text"
-                id="teamMemberInput"
-                class="form-input"
-                placeholder="Enter team member name"
-                required
-              />
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <img src="assets/icons/plus-icon.svg" alt="Add" style="width: 16px; height: 16px; vertical-align: middle;">
-              <span>Add Member</span>
-            </button>
-          </form>
-        </div>
-
-        <!-- Team Members List -->
-        <div id="teamMembersContainer">
-          <div id="teamMembersList" class="ideas-list mt-24"></div>
-        </div>
-      </div>
-
-      <!-- STATISTICS SECTION -->
-      <div id="statsSection" class="stats-section mt-24">
-        <h2 style="margin-bottom: 24px;">Statistics</h2>
-        <div class="stats-container">
-          <div class="stat-card">
-            <div class="stat-value" id="totalIdeas">0</div>
-            <div class="stat-label">Total Ideas</div>
+          <div class="my-schedule-header mb-16">
+            <h2>My Schedule</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">
+              Plan your exams, lectures, events, and holidays. Only future events can be scheduled.
+            </p>
           </div>
-          <div class="stat-card">
-            <div class="stat-value" id="topContributorName">-</div>
-            <div class="stat-label">Top Contributor</div>
+          <div class="my-schedule-layout">
+            <section
+              id="scheduleCalendarSection"
+              class="my-schedule-calendar"
+              role="region"
+              aria-label="My Schedule Calendar"
+            >
+              <div id="scheduleCalendar"></div>
+            </section>
+            <aside
+              id="todayEventsSection"
+              class="today-events-card"
+              role="region"
+              aria-label="Today’s Events"
+            >
+              <h3 class="today-events-title">Today’s Schedule</h3>
+              <div id="todayEventsList" class="today-events-list">
+                <p class="today-events-empty">No events scheduled for today.</p>
+              </div>
+            </aside>
           </div>
-          <div class="stat-card">
-            <div class="stat-value" id="totalMembers">0</div>
-            <div class="stat-label">Total Members</div>
-          </div>
-        </div>
         </div>
       </main>
     </div>
@@ -254,23 +160,79 @@
       </div>
     </div>
 
-    <!-- Edit Idea Modal -->
-    <div id="editIdeaModal" class="modal-overlay">
-      <div class="modal-dialog edit-modal">
+    <!-- My Schedule - Add/Edit Event Modal -->
+    <div id="scheduleEventModal" class="modal-overlay">
+      <div class="modal-dialog">
         <div class="modal-header">
-          <h3>Edit Idea</h3>
+          <h3 id="scheduleEventModalTitle">Add Event</h3>
         </div>
         <div class="modal-body">
-          <form id="editIdeaForm">
+          <form id="scheduleEventForm">
+            <input type="hidden" id="scheduleEventId" />
             <div class="form-group">
-              <label class="form-label">Time Remaining: <span id="editTimeRemaining">15:00</span></label>
-              <div id="editIdeaContent"></div>
+              <label class="form-label" for="scheduleEventTitle">Title <span class="required">*</span></label>
+              <input
+                type="text"
+                id="scheduleEventTitle"
+                name="title"
+                class="form-input"
+                placeholder="e.g., Midterm Exam - CS101"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="scheduleEventType">Type <span class="required">*</span></label>
+              <select id="scheduleEventType" name="type" class="form-select" required>
+                <option value="exam">Exam</option>
+                <option value="lecture">Lecture</option>
+                <option value="event">Event</option>
+                <option value="holiday">Holiday</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="scheduleEventDate">Date <span class="required">*</span></label>
+              <input type="date" id="scheduleEventDate" name="date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="scheduleEventTime">Time (optional)</label>
+              <input
+                type="text"
+                id="scheduleEventTime"
+                name="time"
+                class="form-input"
+                placeholder="e.g., 10:00 AM - 12:00 PM"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="scheduleEventNotes">Notes (optional)</label>
+              <textarea
+                id="scheduleEventNotes"
+                name="notes"
+                class="form-textarea"
+                placeholder="Any extra details..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <input type="checkbox" id="scheduleEventStarred" name="starred" />
+                Star this event
+              </label>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="DialogManager.closeEditIdea()">Cancel</button>
-          <button class="btn btn-primary" onclick="DialogManager.saveEditedIdea()">Save Changes</button>
+          <button class="btn btn-secondary" type="button" onclick="MyScheduleManager.closeEventModal()">Cancel</button>
+          <button
+            id="scheduleEventDeleteBtn"
+            class="btn btn-secondary"
+            type="button"
+            style="display: none;"
+            onclick="MyScheduleManager.requestDeleteActiveEvent()"
+          >
+            Delete
+          </button>
+          <button class="btn btn-primary" type="button" onclick="MyScheduleManager.submitEventForm()">Save Event</button>
         </div>
       </div>
     </div>
@@ -282,49 +244,16 @@
       </div>
     </footer>
 
-    <!-- Quill Editor -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
     <!-- Utilities -->
     <script src="assets/js/storage.js"></script>
     <script src="assets/js/ui-utils.js"></script>
 
     <!-- Feature Modules -->
-    <script src="assets/js/team-members.js"></script>
-    <script src="assets/js/idea-board.js"></script>
     <script src="assets/js/dialog-manager.js"></script>
     <script src="assets/js/theme-manager.js"></script>
-    <script src="assets/js/stats-manager.js"></script>
+    <script src="assets/js/my-schedule.js"></script>
 
-    <!-- App Initialization -->
     <script>
-      /**
-       * Tab switching functionality
-       */
-      function switchTab(tabName) {
-        // Hide all tabs
-        document.querySelectorAll('.tab-content').forEach(tab => {
-          tab.classList.add('hidden');
-        });
-
-        // Remove active class from all buttons
-        document.querySelectorAll('.tab-button').forEach(btn => {
-          btn.classList.remove('active');
-        });
-
-        // Show selected tab
-        if (tabName === 'board') {
-          document.getElementById('boardContainer').classList.remove('hidden');
-          document.querySelectorAll('.tab-button')[0].classList.add('active');
-        } else if (tabName === 'team') {
-          document.getElementById('teamContainer').classList.remove('hidden');
-          document.querySelectorAll('.tab-button')[1].classList.add('active');
-        }
-      }
-
-      /**
-       * Sidebar toggle functionality
-       */
       function toggleSidebar() {
         document.body.classList.toggle('sidebar-open');
         const toggleBtn = document.getElementById('sidebarToggle');
@@ -333,9 +262,6 @@
         toggleBtn.setAttribute('aria-expanded', isOpen);
       }
 
-      /**
-       * Close sidebar when clicking backdrop (mobile)
-       */
       function closeSidebar() {
         document.body.classList.remove('sidebar-open');
         const toggleBtn = document.getElementById('sidebarToggle');
@@ -343,19 +269,13 @@
         toggleBtn.setAttribute('aria-expanded', 'false');
       }
 
-      /**
-       * Initialize app when DOM is ready
-       */
       document.addEventListener('DOMContentLoaded', () => {
-        // Initialize theme
         ThemeManager.init();
-        
-        // Initialize managers
-        IdeaBoardManager.init();
-        TeamMembersManager.init();
-        StatsManager.init();
 
-        // Sidebar toggle handlers
+        if (typeof MyScheduleManager !== 'undefined' && MyScheduleManager.init) {
+          MyScheduleManager.init();
+        }
+
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarBackdrop = document.querySelector('.sidebar-backdrop');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
@@ -368,7 +288,6 @@
           sidebarBackdrop.addEventListener('click', closeSidebar);
         }
 
-        // Close sidebar when clicking nav items on mobile
         sidebarItems.forEach(item => {
           item.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
@@ -376,10 +295,8 @@
             }
           });
         });
-
-        // Show user selection modal
-        IdeaBoardManager.showUserSelectionModal();
       });
     </script>
   </body>
 </html>
+
