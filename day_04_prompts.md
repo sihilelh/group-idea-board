@@ -23,7 +23,7 @@ Requirements are as follows:
 ○ sidebar
 
 
-Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. 
+Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. (And should be in a consistenet theme.)
 
 Requirements for that timer are as follows:
 ○ A 25-minute countdown timer
