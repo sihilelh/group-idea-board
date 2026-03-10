@@ -177,7 +177,8 @@ const IdeaBoardManager = (() => {
    */
   const populateAuthorDropdown = () => {
     const members = StorageManager.getTeamMembers();
-    UIUtils.populateSelect(selectors.authorSelect, members);
+    const currentMember = state.currentUser || StorageManager.getCurrentMember();
+    UIUtils.populateSelect(selectors.authorSelect, members, currentMember || '');
   };
 
   /**
@@ -378,6 +379,26 @@ const IdeaBoardManager = (() => {
 
     if (!modal || !modalSelect) return;
 
+    // Check if currentMember exists in localStorage
+    const currentMember = StorageManager.getCurrentMember();
+    
+    if (currentMember) {
+      // Verify the current member still exists in team members list
+      const memberExists = members.some(m => m === currentMember);
+      
+      if (memberExists) {
+        // Set current user and don't show modal
+        state.currentUser = currentMember;
+        // Pre-select the current member in the author dropdown
+        populateAuthorDropdown();
+        return;
+      } else {
+        // Current member no longer exists, clear it
+        localStorage.removeItem('ideaBoard_currentMember');
+      }
+    }
+
+    // No current member or member doesn't exist - show modal
     // Populate modal dropdown
     modalSelect.innerHTML = '<option value="">Select a name...</option>';
     members.forEach(member => {
@@ -405,7 +426,16 @@ const IdeaBoardManager = (() => {
       return;
     }
 
-    state.currentUser = modalSelect.value;
+    const selectedUser = modalSelect.value;
+    state.currentUser = selectedUser;
+    
+    // Save to localStorage as currentMember
+    StorageManager.setCurrentMember(selectedUser);
+    
+    // Update author dropdown to reflect current user
+    populateAuthorDropdown();
+    
+    // Close modal
     modal.classList.remove('show');
   };
 
