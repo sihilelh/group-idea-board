@@ -8,7 +8,7 @@ Context: Currently this application only have a header only. You have to create 
 
 # Task - Pomodoro Timer
 
-Our initial idea is building a complete "Student Toolkit" Website.
+Context: Our initial idea is building a complete "Student Toolkit" Website.
 
 
 Requirements are as follows:
@@ -23,7 +23,7 @@ Requirements are as follows:
 ○ sidebar
 
 
-Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. 
+Goal: Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. 
 
 Requirements for that timer are as follows:
 ○ A 25-minute countdown timer
@@ -32,8 +32,7 @@ Requirements for that timer are as follows:
 ○ When the timer reaches zero, a bell sound or notification should appear.
 
 
-You can enhance the visual appearance and interaction of the dashboard by adding smooth fade-in animations so that sections appear gradually when the page loads.
-
+Constraints: You can enhance the visual appearance and interaction of the dashboard by adding smooth fade-in animations so that sections appear gradually when the page loads.
 
 Remember that the overall color theme should match UCSC(University of Colombo School of Computing) branding colors:
 ■ Maroon
