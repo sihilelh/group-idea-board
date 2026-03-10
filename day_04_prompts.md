@@ -5,6 +5,8 @@ Context: Currently this application only have a header only. You have to create 
 
 # GPA Calculator Prompt
 
+Logic 
+
 Goal: Creating a GPA calculator.
 Context: Calculator should allow the user to input course credits and grades. When calculate button is clicked, system should compute and display overall GPA.
 Constraints: All inputs should be in two text boxes. Course credits should be an integer greater than 0. Grades input should be either one of A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, E. Both inputs should be required.
@@ -27,5 +29,3 @@ Instead of "+Add Course to List" button, add a small green fit-to-content button
 Instead of "Calculate Overall GPA" button, add a small blue fit-to-content button "Calculate" in the right side.
 Change the font colour of the overall gpa and its output to green. 
 Create a delete function so that you can delete each row if necessary. The delete icon should only display when the user hovers to the specific row. 
-
-
