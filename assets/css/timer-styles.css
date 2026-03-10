@@ -1,0 +1,701 @@
+/* ===== UCSC BRANDING COLORS ===== */
+:root {
+    --maroon: #8B1538;
+    --gold: #FFD700;
+    --maroon-dark: #5C0E26;
+    --maroon-light: #A61A47;
+    --white: #FFFFFF;
+    --light-gray: #F5F5F5;
+    --gray: #E0E0E0;
+    --text-dark: #1F1F1F;
+    --text-light: #666666;
+    --text-lighter: #999999;
+}
+
+/* ===== GLOBAL STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--light-gray) 0%, var(--white) 100%);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-in:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.fade-in:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+}
+
+.navbar-menu {
+    display: flex;
+    list-style: none;
+    gap: 24px;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+    right: 16px;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.nav-link.active {
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--gold);
+}
+
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* ===== MAIN CONTAINER ===== */
+.main-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 24px;
+    padding: 24px 16px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 280px;
+    animation: slideInLeft 0.7s ease-out;
+}
+
+.sidebar-content {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 100px;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--maroon);
+    margin-bottom: 16px;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.event-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(139, 21, 56, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+    border-left: 4px solid var(--maroon);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.event-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-date {
+    font-weight: 700;
+    color: var(--maroon);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.event-text {
+    font-size: 13px;
+    color: var(--text-dark);
+}
+
+/* ===== CONTENT MAIN ===== */
+.content-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ===== TIMER SECTION ===== */
+.timer-section {
+    animation: slideInRight 0.7s ease-out;
+}
+
+.timer-container {
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    color: var(--white);
+}
+
+.timer-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 24px;
+}
+
+/* ===== TIMER TABS ===== */
+.timer-tabs {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tab-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.tab-btn.active {
+    background: var(--gold);
+    color: var(--maroon);
+    border-color: var(--gold);
+}
+
+/* ===== TIMER DISPLAY ===== */
+.timer-display-area {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.timer-circle {
+    width: 280px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border: 4px solid var(--gold);
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-time {
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+}
+
+.timer-separator {
+    margin: 0 12px;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* ===== TIMER STATUS ===== */
+.timer-status {
+    margin-bottom: 32px;
+}
+
+.timer-status p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* ===== TIMER CONTROLS ===== */
+.timer-controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--white);
+    color: var(--maroon);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: var(--gold);
+    color: var(--maroon);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
+}
+
+.btn-danger {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: var(--gold);
+}
+
+/* ===== ANALYTICS SECTION ===== */
+.analytics-section {
+    animation: fadeIn 0.8s ease-out 0.2s forwards;
+}
+
+.analytics-container {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.analytics-header {
+    margin-bottom: 24px;
+}
+
+.analytics-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--maroon);
+}
+
+/* ===== ANALYTICS GRID ===== */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.analytics-card {
+    background: linear-gradient(135deg, rgba(139, 21, 56, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.analytics-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.analytics-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--maroon);
+}
+
+/* ===== ACTIVITY SECTION ===== */
+.activity-section {
+    border-top: 2px solid var(--gray);
+    padding-top: 24px;
+}
+
+.activity-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--maroon);
+    margin-bottom: 16px;
+}
+
+.activity-log {
+    background: var(--light-gray);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 120px;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-item {
+    padding: 8px 12px;
+    background: var(--white);
+    border-left: 4px solid var(--maroon);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-dark);
+}
+
+.activity-item .time {
+    color: var(--text-lighter);
+    font-size: 12px;
+}
+
+.empty-state {
+    color: var(--text-light);
+    font-style: italic;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column-reverse;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .sidebar-content {
+        position: static;
+    }
+
+    .navbar-container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .navbar-menu {
+        gap: 16px;
+    }
+
+    .timer-container {
+        padding: 24px;
+    }
+
+    .timer-circle {
+        width: 240px;
+        height: 240px;
+        font-size: 64px;
+    }
+
+    .timer-time {
+        min-width: 75px;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-title {
+        font-size: 22px;
+    }
+
+    .navbar-menu {
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .nav-link {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .timer-container {
+        padding: 20px;
+    }
+
+    .timer-title {
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+
+    .timer-tabs {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .timer-circle {
+        width: 220px;
+        height: 220px;
+        font-size: 56px;
+    }
+
+    .timer-separator {
+        margin: 0 8px;
+    }
+
+    .timer-controls {
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .analytics-container {
+        padding: 20px;
+    }
+
+    .analytics-title {
+        font-size: 18px;
+    }
+
+    .analytics-grid {
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .analytics-card {
+        padding: 16px;
+    }
+
+    .analytics-value {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-container {
+        padding: 12px;
+    }
+
+    .brand-title {
+        font-size: 18px;
+    }
+
+    .navbar-menu {
+        gap: 8px;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .main-container {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .sidebar-content {
+        padding: 16px;
+    }
+
+    .timer-container {
+        padding: 16px;
+    }
+
+    .timer-title {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .timer-tabs {
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+
+    .tab-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .timer-circle {
+        width: 180px;
+        height: 180px;
+        font-size: 48px;
+        border: 3px solid var(--gold);
+    }
+
+    .timer-time {
+        min-width: 60px;
+    }
+
+    .timer-separator {
+        margin: 0 4px;
+    }
+
+    .timer-controls {
+        gap: 6px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .analytics-container {
+        padding: 16px;
+    }
+
+    .analytics-grid {
+        gap: 12px;
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-card {
+        padding: 12px;
+    }
+
+    .analytics-value {
+        font-size: 24px;
+    }
+
+    .activity-log {
+        min-height: 100px;
+        padding: 12px;
+    }
+}

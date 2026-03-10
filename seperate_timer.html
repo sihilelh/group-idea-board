@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Toolkit - Pomodoro Study Timer</title>
+    <link rel="stylesheet" href="assets/css/timer-styles.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <h1 class="brand-title">📚 Student Toolkit</h1>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="#" class="nav-link active">Study Timer</a></li>
+                <li><a href="#" class="nav-link">GPA Calculator</a></li>
+            </ul>
+        </div>
+    </navbar>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <h2 class="sidebar-title">📅 Upcoming Events</h2>
+                <div class="events-list">
+                    <div class="event-item fade-in">
+                        <span class="event-date">Mar 15</span>
+                        <div class="event-text">Midterm Exam</div>
+                    </div>
+                    <div class="event-item fade-in">
+                        <span class="event-date">Mar 18</span>
+                        <div class="event-text">Project Due</div>
+                    </div>
+                    <div class="event-item fade-in">
+                        <span class="event-date">Mar 22</span>
+                        <div class="event-text">Final Exam</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content-main">
+            <!-- TIMER SECTION -->
+            <section class="timer-section fade-in">
+                <div class="timer-container">
+                    <h2 class="timer-title">Pomodoro Study Timer</h2>
+                    
+                    <!-- Timer Mode Tabs -->
+                    <div class="timer-tabs">
+                        <button class="tab-btn active" onclick="Timer.setMode('pomodoro')">Pomodoro</button>
+                        <button class="tab-btn" onclick="Timer.setMode('short-break')">Short Break</button>
+                        <button class="tab-btn" onclick="Timer.setMode('long-break')">Long Break</button>
+                    </div>
+                    
+                    <!-- Timer Display -->
+                    <div class="timer-display-area">
+                        <div class="timer-circle">
+                            <span id="timerMinutes" class="timer-time">25</span>
+                            <span class="timer-separator">:</span>
+                            <span id="timerSeconds" class="timer-time">00</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Message -->
+                    <div class="timer-status">
+                        <p id="statusText">Ready to focus?</p>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="timer-controls">
+                        <button id="startBtn" class="btn btn-primary" onclick="Timer.start()">
+                            ▶ START
+                        </button>
+                        <button id="pauseBtn" class="btn btn-secondary" onclick="Timer.pause()" style="display: none;">
+                            ⏸ PAUSE
+                        </button>
+                        <button id="resetBtn" class="btn btn-danger" onclick="Timer.reset()">
+                            ↺ RESET
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section class="analytics-section fade-in">
+                <div class="analytics-container">
+                    <div class="analytics-header">
+                        <h3 class="analytics-title">📊 Focus Analytics</h3>
+                    </div>
+
+                    <!-- Analytics Grid -->
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="analytics-label">Total Focus Time</div>
+                            <div class="analytics-value" id="totalFocusTime">0m</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-label">Sessions Completed</div>
+                            <div class="analytics-value" id="sessionsCount">0</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-label">Today's Goal</div>
+                            <div class="analytics-value">120m</div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Summary -->
+                    <div class="activity-section">
+                        <h4 class="activity-title">Activity Summary</h4>
+                        <div class="activity-log">
+                            <div id="activityList" class="activity-list">
+                                <p class="empty-state">No active sessions yet. Start studying!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Audio notification element -->
+    <audio id="timerSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBg==" type="audio/wav">
+    </audio>
+
+    <script src="assets/js/timer.js"></script>
+</body>
+</html>
