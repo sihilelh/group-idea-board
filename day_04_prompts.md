@@ -25,10 +25,10 @@ Requirements are as follows:
 
 Goal: Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. 
 
-Requirements for that timer are as follows:
-○ A 25-minute countdown timer
-○ A Start button
-○ A Reset button
+Requirements for that timer are as follows:  
+○ A 25-minute countdown timer  
+○ A Start button  
+○ A Reset button  
 ○ When the timer reaches zero, a bell sound or notification should appear.
 
 
