@@ -8,6 +8,7 @@ const StorageManager = (() => {
   const STORAGE_KEYS = {
     TEAM_MEMBERS: 'ideaBoard_teamMembers',
     IDEAS: 'ideaBoard_ideas',
+    CURRENT_MEMBER: 'ideaBoard_currentMember',
   };
 
   /**
@@ -62,6 +63,13 @@ const StorageManager = (() => {
       let members = getTeamMembers();
       members = members.filter(m => m !== name);
       localStorage.setItem(STORAGE_KEYS.TEAM_MEMBERS, JSON.stringify(members));
+      
+      // If the removed member is the current member, clear it
+      const currentMember = getCurrentMember();
+      if (currentMember === name) {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_MEMBER);
+      }
+      
       return true;
     } catch (error) {
       console.error('Error removing team member:', error);
@@ -129,12 +137,44 @@ const StorageManager = (() => {
   };
 
   /**
+   * Get current member from localStorage
+   * @returns {string|null} Current member name or null
+   */
+  const getCurrentMember = () => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.CURRENT_MEMBER);
+    } catch (error) {
+      console.error('Error retrieving current member:', error);
+      return null;
+    }
+  };
+
+  /**
+   * Set current member in localStorage
+   * @param {string} name - Member name
+   * @returns {boolean} Success status
+   */
+  const setCurrentMember = (name) => {
+    try {
+      if (!name || typeof name !== 'string' || name.trim() === '') {
+        throw new Error('Invalid member name');
+      }
+      localStorage.setItem(STORAGE_KEYS.CURRENT_MEMBER, name.trim());
+      return true;
+    } catch (error) {
+      console.error('Error setting current member:', error);
+      return false;
+    }
+  };
+
+  /**
    * Clear all data (for development/testing)
    */
   const clearAll = () => {
     try {
       localStorage.removeItem(STORAGE_KEYS.TEAM_MEMBERS);
       localStorage.removeItem(STORAGE_KEYS.IDEAS);
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_MEMBER);
       return true;
     } catch (error) {
       console.error('Error clearing data:', error);
@@ -149,6 +189,8 @@ const StorageManager = (() => {
     getIdeas,
     addIdea,
     removeIdea,
+    getCurrentMember,
+    setCurrentMember,
     clearAll,
   };
 })();
