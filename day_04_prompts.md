@@ -13,14 +13,14 @@ Context: Our initial idea is building a complete "Student Toolkit" Website.
 
 Requirements are as follows:
 1. The application must be implemented using HTML, CSS, and JavaScript.
-2. The page must include the following sections:
-○ A Navigation Bar containing the following menu items:
-■ GPA Calculator
-■ Study Timer
-○ A Sidebar displaying a section titled “Upcoming Events.”
-3. Use CSS classes to organize the layout. The design should clearly include:
-○ navbar
-○ sidebar
+2. The page must include the following sections:  
+○ A Navigation Bar containing the following menu items:  
+    ■ GPA Calculator  
+    ■ Study Timer  
+○ A Sidebar displaying a section titled “Upcoming Events.”  
+3. Use CSS classes to organize the layout. The design should clearly include:  
+    ○ navbar  
+    ○ sidebar
 
 
 Goal: Currently the GPA calculator is being developed by some part of our team and our task is to build the Pomodoro Study Timer. 
