@@ -2,30 +2,57 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>Cumulative GPA Calculator</title>
+    <title>GPA Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 40px; background-color: #eef2f3; }
-        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 1.5rem; }
-        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        body { font-family: 'Poppins', sans-serif; display: flex; justify-content: center; padding: 40px; background-color: #f8f9fa; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
+        h2 { text-align: center; color: #333; margin-bottom: 1.5rem; font-weight: 600; }
+        
+        .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 5px; }
         .input-group { flex: 1; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666; }
-        input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; transition: border-color 0.3s; }
-        input:focus { border-color: #3498db; outline: none; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 5px; color: #777; font-weight: 600; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        .btn-add { background-color: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-calc { background-color: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-add { background-color: #28a745; color: white; border: none; height: 41px; width: 45px; border-radius: 6px; cursor: pointer; font-size: 1.2rem; font-weight: bold; flex-shrink: 0; }
         
-        #courseList { margin: 20px 0; border-top: 1px solid #eee; padding-top: 10px; }
-        .course-entry { padding: 8px; border-bottom: 1px solid #fafafa; font-size: 0.95rem; color: #444; }
-        .error-box { color: #e74c3c; font-size: 0.85rem; margin-top: 10px; line-height: 1.4; min-height: 20px; }
-        #finalResult { margin-top: 20px; text-align: center; font-size: 1.4rem; color: #2c3e50; font-weight: bold; }
+        .error-container { color: #dc3545; font-size: 0.75rem; margin-bottom: 15px; min-height: 35px; line-height: 1.2; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { border-bottom: 2px solid #eee; padding: 10px; text-align: center; font-weight: 600; font-size: 0.9rem; }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid #f1f1f1; font-size: 0.9rem; position: relative; }
+        
+        /* The Red Dustbin Icon Styling */
+        .delete-btn { 
+            position: absolute; 
+            right: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            opacity: 0; 
+            transition: opacity 0.2s, transform 0.1s; 
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .delete-btn:active { transform: translateY(-50%) scale(0.9); }
+        tr:hover .delete-btn { opacity: 1; }
+
+        .bin-icon { fill: #dc3545; width: 18px; height: 18px; }
+
+        .footer-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+        .btn-calc { background-color: #007bff; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        
+        #finalResult { margin-top: 25px; text-align: center; font-size: 1.5rem; color: #28a745; font-weight: 600; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>GPA Calculator 🎓</h2>
+    <h2>GPA Calculator</h2>
     
     <div class="input-row">
         <div class="input-group">
@@ -36,16 +63,25 @@
             <label>Grade</label>
             <input type="text" id="grade" placeholder="e.g. A+">
         </div>
+        <button class="btn-add" onclick="addCourse()" title="Add Course">+</button>
     </div>
 
-    <div id="errorDisplay" class="error-box"></div>
+    <div id="errorDisplay" class="error-container"></div>
 
-    <button class="btn-add" onclick="addCourse()">+ Add Course to List</button>
-    
-    <div id="courseList">
-        </div>
+    <table id="courseTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Course Number</th>
+                <th>Credits</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
 
-    <button class="btn-calc" onclick="calculateFinalGPA()">Calculate Overall GPA</button>
+    <div class="footer-row">
+        <button class="btn-calc" onclick="calculateFinalGPA()">Calculate</button>
+    </div>
 
     <div id="finalResult"></div>
 </div>
@@ -57,6 +93,12 @@
         'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'D-': 0.7, 'E': 0.0
     };
 
+    [document.getElementById('credits'), document.getElementById('grade')].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addCourse();
+        });
+    });
+
     function addCourse() {
         const creditInput = document.getElementById('credits');
         const gradeInput = document.getElementById('grade');
@@ -64,14 +106,13 @@
         
         let errors = [];
         const credits = parseInt(creditInput.value);
-        const grade = gradeInput.value.trim(); // No .toUpperCase() to enforce strict casing
+        const gradeRaw = gradeInput.value.trim().toUpperCase();
 
-        // Validation Logic
         if (isNaN(credits) || credits <= 0) {
-            errors.push("• Credits must be an integer greater than 0.");
+            errors.push("Credits must be an integer > 0.");
         }
-        if (!gradeScale.hasOwnProperty(grade)) {
-            errors.push("• Grade must be one of: A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, E (Case Sensitive).");
+        if (!gradeScale.hasOwnProperty(gradeRaw)) {
+            errors.push("Grade must be A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, or E.");
         }
 
         if (errors.length > 0) {
@@ -79,40 +120,65 @@
             return;
         }
 
-        // Clear errors and add course
         errorDisplay.innerHTML = "";
-        const course = { credits: credits, grade: grade, point: gradeScale[grade] };
-        courses.push(course);
+        courses.push({ credits, grade: gradeRaw, point: gradeScale[gradeRaw] });
+        updateTable();
 
-        // Display the list item
-        const list = document.getElementById('courseList');
-        const entry = document.createElement('div');
-        entry.className = 'course-entry';
-        entry.innerHTML = `<strong>Course ${courses.length}:</strong> ${credits} Credits — Grade: ${grade}`;
-        list.appendChild(entry);
-
-        // Reset inputs for next entry
         creditInput.value = "";
         gradeInput.value = "";
         creditInput.focus();
     }
 
-    function calculateFinalGPA() {
+    function updateTable() {
+        const table = document.getElementById('courseTable');
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        
+        if (courses.length > 0) table.style.display = "table";
+
+        courses.forEach((course, index) => {
+            const row = `<tr>
+                <td>${index + 1}</td>
+                <td>${course.credits}</td>
+                <td>${course.grade} 
+                    <button class="delete-btn" onclick="deleteRow(${index})" title="Delete Course">
+                        <svg class="bin-icon" viewBox="0 0 24 24">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function deleteRow(index) {
+        courses.splice(index, 1);
         if (courses.length === 0) {
-            document.getElementById('finalResult').innerHTML = "Add some courses first!";
+            document.getElementById('courseTable').style.display = "none";
+            document.getElementById('finalResult').style.display = "none";
+        }
+        updateTable();
+    }
+
+    function calculateFinalGPA() {
+        const resultDiv = document.getElementById('finalResult');
+        if (courses.length === 0) {
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = "Add courses first!";
             return;
         }
 
         let totalPoints = 0;
         let totalCredits = 0;
-
         courses.forEach(c => {
             totalPoints += (c.point * c.credits);
             totalCredits += c.credits;
         });
 
         const gpa = totalPoints / totalCredits;
-        document.getElementById('finalResult').innerHTML = `Overall GPA: ${gpa.toFixed(2)}`;
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `Overall GPA: ${gpa.toFixed(2)}`;
     }
 </script>
 
