@@ -141,10 +141,26 @@ const DialogManager = (() => {
   /**
    * Save edited idea
    */
+  const isValidIdeaContent = (text) => {
+    const trimmed = text.trim();
+    return /^[A-Za-z0-9]/.test(trimmed);
+  };
+
   const saveEditedIdea = () => {
     if (!currentEditingIdeaId || !editIdeaQuill) return;
 
     const newContent = editIdeaQuill.root.innerHTML;
+    const plainText = editIdeaQuill.getText();
+
+    if (!plainText.trim()) {
+      DialogManager.showAlert('Content Required', 'Please enter your idea');
+      return;
+    }
+
+    if (!isValidIdeaContent(plainText)) {
+      DialogManager.showAlert('Invalid Idea', 'Ideas must start with a letter or number');
+      return;
+    }
 
     // Get the idea from storage
     const ideas = StorageManager.getIdeas();
