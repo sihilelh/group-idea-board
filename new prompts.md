@@ -12,3 +12,9 @@ Allow users to edit the submitted ideas.
 The idea editing tab also should be responsive to different screen sizes.
 Only display 3 lines of an idea on the application interface.
 Add a read more button to load the next 3 lines of the content continously until the user able to view the full content of that very long idea.
+
+ERROR 08:
+Goal: Edit the code accordingly to make the application responsive for any screen
+Context: The side bar appears on the top of the background content blocking it.
+Constraints: Link the side bar with a navigation button for other devices except desktop or laptops.
+Make the application responsive for every screen size.
