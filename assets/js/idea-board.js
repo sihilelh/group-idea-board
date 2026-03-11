@@ -153,6 +153,18 @@ const IdeaBoardManager = (() => {
       }
     }
 
+    const normalizedContent = content.trim().toLowerCase();
+    const existingIdeas = StorageManager.getIdeas();
+    const isDuplicate = existingIdeas.some((idea) => {
+      const ideaText = idea.content ? idea.content.trim().toLowerCase() : '';
+      return ideaText === normalizedContent;
+    });
+
+    if (isDuplicate) {
+      DialogManager.showAlert('Duplicate Idea', 'This idea already exists!');
+      return;
+    }
+
     const idea = StorageManager.addIdea({
       author,
       content,
