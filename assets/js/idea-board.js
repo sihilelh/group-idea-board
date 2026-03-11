@@ -126,6 +126,11 @@ const IdeaBoardManager = (() => {
    * Handle adding a new idea
    * @param {Event} e - Submit event
    */
+  const isValidIdeaContent = (text) => {
+    const trimmed = text.trim();
+    return /^[A-Za-z0-9]/.test(trimmed);
+  };
+
   const handleAddIdea = (e) => {
     e.preventDefault();
 
@@ -138,16 +143,22 @@ const IdeaBoardManager = (() => {
     }
 
     let content = '';
+    let plainText = '';
+
     if (quillEditor) {
       content = quillEditor.root.innerHTML;
-      if (content === '<p><br></p>' || content.trim() === '') {
+      plainText = quillEditor.getText();
+
+      if (content === '<p><br></p>' || plainText.trim() === '') {
         DialogManager.showAlert('Content Required', 'Please enter your idea');
         return;
       }
     } else {
       const textarea = document.querySelector(selectors.contentEditor);
       content = textarea ? textarea.value : '';
-      if (!content.trim()) {
+      plainText = content;
+
+      if (!plainText.trim()) {
         DialogManager.showAlert('Content Required', 'Please enter your idea');
         return;
       }
@@ -162,6 +173,12 @@ const IdeaBoardManager = (() => {
 
     if (isDuplicate) {
       DialogManager.showAlert('Duplicate Idea', 'This idea already exists!');
+    }
+    if (!isValidIdeaContent(plainText)) {
+      DialogManager.showAlert(
+        'Invalid Idea',
+        'Ideas must start with a letter or number'
+      );
       return;
     }
 
