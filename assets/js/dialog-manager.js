@@ -76,11 +76,18 @@ const DialogManager = (() => {
   /**
    * Show edit idea modal
    * @param {string} ideaId - Idea ID to edit
-   * @param {string} content - Current idea content
    */
-  const showEditIdea = (ideaId, content) => {
+  const showEditIdea = (ideaId) => {
     const modal = document.querySelector('#editIdeaModal');
     const ideaContainer = document.querySelector('#editIdeaContent');
+
+    const ideas = StorageManager.getIdeas();
+    const idea = ideas.find(i => i.id === ideaId);
+
+    if (!idea) {
+      DialogManager.showAlert('Idea Not Found', 'The selected idea could not be loaded.');
+      return;
+    }
 
     currentEditingIdeaId = ideaId;
 
@@ -102,13 +109,15 @@ const DialogManager = (() => {
     }
 
     // Set content
-    editIdeaQuill.root.innerHTML = content;
+    editIdeaQuill.root.innerHTML = idea.content;
 
     // Start timer countdown
     startEditTimer();
 
     // Show modal
-    modal.classList.add('show');
+    if (modal) {
+      modal.classList.add('show');
+    }
   };
 
   /**

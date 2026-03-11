@@ -564,6 +564,27 @@ body.sidebar-open .sidebar-backdrop {
   color: var(--text-primary);
 }
 
+.idea-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.read-more-btn {
+  background: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
+}
+
 .idea-footer {
   display: flex;
   gap: 8px;
@@ -1282,6 +1303,8 @@ body.sidebar-open .sidebar-backdrop {
 
 .modal-dialog.edit-modal {
   max-width: 600px;
+  max-height: 90vh;
+  overflow: auto;
 }
 
 @keyframes slideInScale {

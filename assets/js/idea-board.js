@@ -120,6 +120,16 @@ const IdeaBoardManager = (() => {
         renderIdeas();
       });
     }
+
+    // Delegate read-more clicks to avoid recreating listeners on each render
+    const container = document.querySelector(selectors.ideasContainer);
+    if (container) {
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('.read-more-btn');
+        if (!btn) return;
+        handleReadMoreClick(btn);
+      });
+    }
   };
 
   /**
@@ -292,6 +302,63 @@ const IdeaBoardManager = (() => {
   };
 
   /**
+   * Handle incrementally revealing more lines in idea content
+   * @param {HTMLElement} button - Read more button
+   */
+  const handleReadMoreClick = (button) => {
+    const card = button.closest('.idea-card');
+    if (!card) return;
+
+    const contentEl = card.querySelector('.idea-content');
+    if (!contentEl) return;
+
+    const lineHeight = parseFloat(button.dataset.lineHeight) || parseFloat(getComputedStyle(contentEl).lineHeight) || 20;
+    const linesShown = parseInt(button.dataset.linesShown || '3', 10);
+    const newLines = linesShown + 3;
+
+    const newMaxHeight = newLines * lineHeight;
+    contentEl.style.maxHeight = `${newMaxHeight}px`;
+    button.dataset.linesShown = newLines;
+
+    // Hide button if we are showing the full content
+    if (contentEl.scrollHeight <= newMaxHeight + 1) {
+      button.style.display = 'none';
+    }
+  };
+
+  /**
+   * Apply read-more truncation (3 lines) for long idea content
+   */
+  const applyReadMoreTruncation = () => {
+    const container = document.querySelector(selectors.ideasContainer);
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.idea-card');
+    cards.forEach((card) => {
+      const contentEl = card.querySelector('.idea-content');
+      const button = card.querySelector('.read-more-btn');
+      if (!contentEl || !button) return;
+
+      const lineHeight = parseFloat(getComputedStyle(contentEl).lineHeight) || 20;
+      const initialLines = 3;
+      const maxHeight = initialLines * lineHeight;
+
+      contentEl.style.maxHeight = `${maxHeight}px`;
+      contentEl.style.overflow = 'hidden';
+      contentEl.style.position = 'relative';
+
+      button.dataset.linesShown = initialLines;
+      button.dataset.lineHeight = lineHeight;
+
+      if (contentEl.scrollHeight <= maxHeight + 1) {
+        button.style.display = 'none';
+      } else {
+        button.style.display = 'inline-block';
+      }
+    });
+  };
+
+  /**
    * Render ideas with applied filters and sorting
    */
   const renderIdeas = () => {
@@ -323,13 +390,13 @@ const IdeaBoardManager = (() => {
         idea => {
           const canEdit = canEditIdea(idea.timestamp);
           const editBtn = canEdit ? `
-            <button class="btn-edit" onclick="DialogManager.showEditIdea('${idea.id}', '${idea.content.replace(/'/g, "\\'")}')" title="Edit idea">
+            <button class="btn-edit" onclick="DialogManager.showEditIdea('${idea.id}')" title="Edit idea">
               Edit
             </button>
           ` : `<button class="btn-edit expired" title="Edit window expired" disabled>Edit</button>`;
 
           return `
-            <div class="idea-card fade-in">
+            <div class="idea-card fade-in" data-idea-id="${idea.id}">
               <div class="idea-header">
                 <div>
                   <div class="idea-author">${UIUtils.escapeHtml(idea.author)}</div>
@@ -342,8 +409,11 @@ const IdeaBoardManager = (() => {
                   </button>
                 </div>
               </div>
-              <div class="idea-content">
-                ${idea.content}
+              <div class="idea-content-wrapper">
+                <div class="idea-content">
+                  ${idea.content}
+                </div>
+                <button type="button" class="read-more-btn">Read more</button>
               </div>
             </div>
           `;
@@ -352,6 +422,9 @@ const IdeaBoardManager = (() => {
       .join('');
 
     container.innerHTML = ideasHtml;
+
+    // Apply truncation/read-more handling for long ideas
+    applyReadMoreTruncation();
 
     // Render pagination
     if (paginationContainer && totalPages > 1) {
