@@ -378,6 +378,16 @@
           });
         });
 
+        // Ensure sidebar is closed on load (mobile/tablet)
+        closeSidebar();
+
+        // Close sidebar when resizing to desktop widths
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 1024) {
+            closeSidebar();
+          }
+        });
+
         // Show user selection modal
         IdeaBoardManager.showUserSelectionModal();
       });

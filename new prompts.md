@@ -18,3 +18,4 @@ Goal: Edit the code accordingly to make the application responsive for any scree
 Context: The side bar appears on the top of the background content blocking it.
 Constraints: Link the side bar with a navigation button for other devices except desktop or laptops.
 Make the application responsive for every screen size.
+It seems to be the error is with the animation check all entities that make the side navigation responsive and make above changes. The side side bar MUST move away from on top of the background and should hidden untill user clicks the button for summon the side bar.
